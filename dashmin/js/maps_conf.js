@@ -103,7 +103,7 @@ var color_array = [
   "#17a64c",
 ];
 
-function initMap() {
+function initMaps() {
 
   var directionsService = new google.maps.DirectionsService();
  
@@ -192,5 +192,15 @@ function initMap() {
         });
       }
     }
+  });
+}
+
+function initMap(){
+  var map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 14,
+    center: {
+      lat: 14.622085,
+      lng: 121.049639,
+    },
   });
 }
