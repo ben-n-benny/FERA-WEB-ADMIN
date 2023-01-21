@@ -99,6 +99,7 @@ var request = {
 
 service.nearbySearch(request, function (results, status) {
   if (status === google.maps.places.PlacesServiceStatus.OK) {
+    console.log(results)
     // The first result is the nearest fire station
     //nearestFireStation = results;
 
@@ -316,10 +317,6 @@ function executes(response) {
         polyline.setMap(map);
         
         // console.log(path);
-
-        setTimeout(function(){
-          console.log("HELLO")
-        }, 1000);
       }
     }
   }
