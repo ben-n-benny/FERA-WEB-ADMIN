@@ -300,11 +300,24 @@ function executes(response) {
     arr_index++;
     temp_array.push(array_points[arr_index]);
     new_points_array.push(temp_array);
+
   }
 
   new_points_array.forEach((npa_item) => {
     graph.addNode(npa_item[0][0].node_name);
     graph.addNode(npa_item[1][0].node_name);
+    var path = google.maps.geometry.encoding.decodePath(npa_item[0][0].lat_lng);
+    // console.log(path);
+    var polyline = new google.maps.Polyline({
+      path: path,
+      strokeColor: "#800020",
+      strokeOpacity: 0.8,
+      strokeWeight: 8,
+      fillColor: "#800020",
+      fillOpacity: 0.35,
+      map: map,
+    });
+    polyline.setMap(map);
   });
   new_points_array.forEach((npa_item) => {
     graph.addEdge(
@@ -336,10 +349,10 @@ function executes(response) {
         // console.log(path);
         var polyline = new google.maps.Polyline({
           path: path,
-          strokeColor: single_color,
+          strokeColor: "#0000FF",
           strokeOpacity: 0.8,
           strokeWeight: 8,
-          fillColor: single_color,
+          fillColor: "#0000FF",
           fillOpacity: 0.35,
           map: map,
         });
