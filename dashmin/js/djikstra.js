@@ -302,8 +302,6 @@ function executes(response) {
     new_points_array.push(temp_array);
   }
 
-  
-
   new_points_array.forEach((npa_item) => {
     graph.addNode(npa_item[0][0].node_name);
     graph.addNode(npa_item[1][0].node_name);
@@ -315,29 +313,41 @@ function executes(response) {
       npa_item[0][0].distance
     );
   });
-  console.log(graph.dijkstra("AAAA", "AAAH"));
+  var shortest = graph.dijkstra("AAAA", "AAAH");
 
-  console.log(graph.nodes);
-
-  new_points_array.forEach((npa_item) => {
-    console.log(npa_item[0][0].node_name);
-    console.log(npa_item[1][0].node_name);
-    console.log(npa_item[0][0].lat_lng);
-    console.log(npa_item[1][0].lat_lng);
-    console.log("\n");
-    var path = google.maps.geometry.encoding.decodePath(npa_item[0][0].lat_lng);
-    console.log(path)
-    var polyline = new google.maps.Polyline({
-      path: path,
-      strokeColor: single_color,
-      strokeOpacity: 0.8,
-      strokeWeight: 8,
-      fillColor: single_color,
-      fillOpacity: 0.35,
-      map: map,
+  console.log(shortest);
+  for (var slen = 0; slen < shortest.length - 1; slen++) {
+    // console.log(shortest[slen]);
+    // console.log(shortest[slen + 1]);
+    // console.log("\n");
+    var temp1 = shortest[slen];
+    var temp2 = shortest[slen + 1];
+    new_points_array.forEach((npa_item) => {
+      console.log(npa_item[0][0].node_name);
+      console.log(npa_item[1][0].node_name);
+      console.log("\n");
+      if (
+        npa_item[0][0].node_name == temp1 &&
+        npa_item[1][0].node_name == temp2
+      ) {
+        var path = google.maps.geometry.encoding.decodePath(
+          npa_item[0][0].lat_lng
+        );
+        // console.log(path);
+        var polyline = new google.maps.Polyline({
+          path: path,
+          strokeColor: single_color,
+          strokeOpacity: 0.8,
+          strokeWeight: 8,
+          fillColor: single_color,
+          fillOpacity: 0.35,
+          map: map,
+        });
+        polyline.setMap(map);
+      }
+      
     });
-    polyline.setMap(map);
-  });
+  }
 }
 
 //executes(route_ret)
