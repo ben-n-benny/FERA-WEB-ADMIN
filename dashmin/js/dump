@@ -153,3 +153,118 @@
 //   console.log(graph.dijkstra("AAAA", "AAAB"));
 //   //console.log(this, graph.nodes);
 // }
+
+// array_points.push([
+        //   [
+        //     {
+        //       node_name: letter_one,
+        //       lat: steps.start_point.lat(),
+        //       lng: steps.start_point.lng(),
+        //       distance: steps.distance.value,
+        //     },
+        //     {
+        //       node_name: letter_two,
+        //       lat: steps.end_point.lat(),
+        //       lng: steps.end_point.lng(),
+        //       distance: steps.distance.value,
+        //     },
+        //   ],
+        // ]);
+
+        // console.log(
+        //   "START POINT",
+        //   steps.start_point.lat(),
+        //   steps.start_point.lng()
+        // );
+        // console.log("END POINT", steps.end_point.lat(), steps.end_point.lng());
+        // new google.maps.Marker({
+        //   position: {
+        //     lat: steps.start_point.lat(),
+        //     lng: steps.start_point.lng(),
+        //   },
+        //   map: map,
+        //   label: letter_one,
+        // });
+        // new google.maps.Marker({
+        //   position: {
+        //     lat: steps.end_point.lat(),
+        //     lng: steps.end_point.lng(),
+        //   },
+        //   map: map,
+        //   label: letter_two,
+        // });
+
+        // var path = google.maps.geometry.encoding.decodePath(
+        //   steps.encoded_lat_lngs
+        // );
+        // console.log(path)
+        // var polyline = new google.maps.Polyline({
+        //   path: path,
+        //   strokeColor: single_color,
+        //   strokeOpacity: 0.8,
+        //   strokeWeight: 8,
+        //   fillColor: single_color,
+        //   fillOpacity: 0.35,
+        //   map: map,
+        // });
+        // polyline.setMap(map);
+
+        // graph.addNode("AAAA");
+// graph.addNode("AAAB");
+// graph.addNode("AAAB");
+// graph.addNode("AAAD");
+// graph.addNode("AAAD");
+// graph.addNode("AAAF");
+// graph.addNode("AAAF");
+// graph.addNode("AAAH");
+// graph.addNode("AAAA");
+// graph.addNode("AAAB");
+// graph.addNode("AAAB");
+// graph.addNode("AAAL");
+// graph.addNode("AAAL");
+// graph.addNode("AAAN");
+// graph.addNode("AAAN");
+// graph.addNode("AAAH");
+// graph.addNode("AAAA");
+// graph.addNode("AAAB");
+// graph.addNode("AAAB");
+// graph.addNode("AAAT");
+// graph.addNode("AAAT");
+// graph.addNode("AAAV");
+// graph.addNode("AAAV");
+// graph.addNode("AAAH");
+
+// graph.addEdge("AAAA", "AAAB", 300);
+// graph.addEdge("AAAB", "AAAD", 93);
+// graph.addEdge("AAAD", "AAAF", 1108);
+// graph.addEdge("AAAF", "AAAH", 1381);
+// graph.addEdge("AAAA", "AAAB", 300);
+// graph.addEdge("AAAB", "AAAL", 761);
+// graph.addEdge("AAAL", "AAAN", 1274);
+// graph.addEdge("AAAN", "AAAH", 363);
+// graph.addEdge("AAAA", "AAAB", 300);
+// graph.addEdge("AAAB", "AAAT", 2267);
+// graph.addEdge("AAAT", "AAAV", 475);
+// graph.addEdge("AAAV", "AAAH", 644);
+
+// console.log(graph.nodes)
+// console.log(graph.dijkstra("AAAA", "AAAH"));
+// graph.addEdge("A", "E", 4);
+// graph.addEdge("E", "D", 1);
+// graph.addEdge("E", "B", 2);
+// graph.addEdge("A", "B", 1);
+// graph.addEdge("B", "D", 5);
+// graph.addEdge("A", "C", 4);
+// graph.addEdge("C", "D", 1);
+// graph.addEdge("A", "B", 1);
+// graph.addEdge("B", "C", 2);
+// graph.addEdge("C", "D", 1);
+// graph.addEdge("A", "C", 4);
+// graph.addEdge("C", "B", 2);
+// graph.addEdge("B", "D", 5);
+
+//
+
+// console.log(graph.nodes);
+
+//

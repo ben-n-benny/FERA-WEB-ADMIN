@@ -16,7 +16,7 @@ for (let i = 65; i <= 68; i++) {
 
 class Graph {
   constructor() {
-    this.nodes;
+    this.nodes = new Map();
   }
 
   addNode(node) {
@@ -76,71 +76,6 @@ class Graph {
   }
 }
 // var graph = new Graph();
-
-var graph = new Graph();
-
-graph.nodes = new Map();
-// graph.addNode("AAAA");
-// graph.addNode("AAAB");
-// graph.addNode("AAAB");
-// graph.addNode("AAAD");
-// graph.addNode("AAAD");
-// graph.addNode("AAAF");
-// graph.addNode("AAAF");
-// graph.addNode("AAAH");
-// graph.addNode("AAAA");
-// graph.addNode("AAAB");
-// graph.addNode("AAAB");
-// graph.addNode("AAAL");
-// graph.addNode("AAAL");
-// graph.addNode("AAAN");
-// graph.addNode("AAAN");
-// graph.addNode("AAAH");
-// graph.addNode("AAAA");
-// graph.addNode("AAAB");
-// graph.addNode("AAAB");
-// graph.addNode("AAAT");
-// graph.addNode("AAAT");
-// graph.addNode("AAAV");
-// graph.addNode("AAAV");
-// graph.addNode("AAAH");
-
-// graph.addEdge("AAAA", "AAAB", 300);
-// graph.addEdge("AAAB", "AAAD", 93);
-// graph.addEdge("AAAD", "AAAF", 1108);
-// graph.addEdge("AAAF", "AAAH", 1381);
-// graph.addEdge("AAAA", "AAAB", 300);
-// graph.addEdge("AAAB", "AAAL", 761);
-// graph.addEdge("AAAL", "AAAN", 1274);
-// graph.addEdge("AAAN", "AAAH", 363);
-// graph.addEdge("AAAA", "AAAB", 300);
-// graph.addEdge("AAAB", "AAAT", 2267);
-// graph.addEdge("AAAT", "AAAV", 475);
-// graph.addEdge("AAAV", "AAAH", 644);
-
-// console.log(graph.nodes)
-// console.log(graph.dijkstra("AAAA", "AAAH"));
-// graph.addEdge("A", "E", 4);
-// graph.addEdge("E", "D", 1);
-// graph.addEdge("E", "B", 2);
-// graph.addEdge("A", "B", 1);
-// graph.addEdge("B", "D", 5);
-// graph.addEdge("A", "C", 4);
-// graph.addEdge("C", "D", 1);
-// graph.addEdge("A", "B", 1);
-// graph.addEdge("B", "C", 2);
-// graph.addEdge("C", "D", 1);
-// graph.addEdge("A", "C", 4);
-// graph.addEdge("C", "B", 2);
-// graph.addEdge("B", "D", 5);
-
-//
-
-// console.log(graph.nodes);
-
-//
-var directionsService = new google.maps.DirectionsService();
-
 var map = new google.maps.Map(document.getElementById("map"), {
   zoom: 14,
   center: {
@@ -149,27 +84,76 @@ var map = new google.maps.Map(document.getElementById("map"), {
   },
 });
 
-var request = {
-  origin: {
-    lat: 13.330331,
-    lng: 123.723402,
-  },
-  destination: {
-    lat: 13.344164,
-    lng: 123.733556,
-  },
-  travelMode: "DRIVING",
-  provideRouteAlternatives: true,
-};
 
-var array_points = [];
-var route_ret;
 
-directionsService.route(request).then((ret) => executes(ret));
+  // Create a new Places service
+  var service = new google.maps.places.PlacesService(map);
 
-console.log(route_ret);
+  // Search for fire stations near the map's center
+  var request = {
+    location: {
+      lat: 13.33075,
+      lng: 123.724856,
+    },
+    radius: "5000",
+    type: ["fire_station"],
+  };
+
+  service.nearbySearch(request, function (results, status) {
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+      // The first result is the nearest fire station
+      //nearestFireStation = results;
+
+      for (var nearestFireStation of results) {
+
+      // console.log(nearestFireStation)
+
+        // new google.maps.Marker({
+        //   position: {
+        //     lat: nearestFireStation.geometry.location.lat(),
+        //     lng: nearestFireStation.geometry.location.lng(),
+        //   },
+        //   map: map,
+        //   title: nearestFireStation.name,
+        // });
+      getShortestPath(request.location, {
+        lat: nearestFireStation.geometry.location.lat(),
+        lng: nearestFireStation.geometry.location.lng(),
+      });
+        
+        
+
+      }
+    }
+  });
+
+
+
+var directionsService = new google.maps.DirectionsService();
+function getShortestPath(origin_point,destination_point){
+  console.log(origin_point);
+  console.log(destination_point)
+  
+
+  var request = {
+    origin: origin_point,
+    destination: destination_point,
+    travelMode: "DRIVING",
+    provideRouteAlternatives: true,
+  };
+
+  
+
+  directionsService.route(request).then((ret) => executes(ret));
+
+}
+
+
 
 function executes(response) {
+  var array_points = [];
+  var route_ret;
+  var graph = new Graph();
   var letter_index = 0;
   var single_color = "#e38f05";
   //.var response_poly = response.routes[0].legs[0].steps[0].encoded_lat_lngs;
@@ -197,60 +181,7 @@ function executes(response) {
             lat_lng: steps.encoded_lat_lngs,
           },
         ]);
-        // array_points.push([
-        //   [
-        //     {
-        //       node_name: letter_one,
-        //       lat: steps.start_point.lat(),
-        //       lng: steps.start_point.lng(),
-        //       distance: steps.distance.value,
-        //     },
-        //     {
-        //       node_name: letter_two,
-        //       lat: steps.end_point.lat(),
-        //       lng: steps.end_point.lng(),
-        //       distance: steps.distance.value,
-        //     },
-        //   ],
-        // ]);
-
-        // console.log(
-        //   "START POINT",
-        //   steps.start_point.lat(),
-        //   steps.start_point.lng()
-        // );
-        // console.log("END POINT", steps.end_point.lat(), steps.end_point.lng());
-        // new google.maps.Marker({
-        //   position: {
-        //     lat: steps.start_point.lat(),
-        //     lng: steps.start_point.lng(),
-        //   },
-        //   map: map,
-        //   label: letter_one,
-        // });
-        // new google.maps.Marker({
-        //   position: {
-        //     lat: steps.end_point.lat(),
-        //     lng: steps.end_point.lng(),
-        //   },
-        //   map: map,
-        //   label: letter_two,
-        // });
-
-        // var path = google.maps.geometry.encoding.decodePath(
-        //   steps.encoded_lat_lngs
-        // );
-        // console.log(path)
-        // var polyline = new google.maps.Polyline({
-        //   path: path,
-        //   strokeColor: single_color,
-        //   strokeOpacity: 0.8,
-        //   strokeWeight: 8,
-        //   fillColor: single_color,
-        //   fillOpacity: 0.35,
-        //   map: map,
-        // });
-        // polyline.setMap(map);
+        
       }
     }
   }
@@ -326,41 +257,41 @@ function executes(response) {
       npa_item[0][0].distance
     );
   });
-  var shortest = graph.dijkstra("AAAA", "AAAH");
+  //var shortest = graph.dijkstra("AAAA", "AAAH");
 
-  console.log(shortest);
-  for (var slen = 0; slen < shortest.length - 1; slen++) {
-    // console.log(shortest[slen]);
-    // console.log(shortest[slen + 1]);
-    // console.log("\n");
-    var temp1 = shortest[slen];
-    var temp2 = shortest[slen + 1];
-    new_points_array.forEach((npa_item) => {
-      console.log(npa_item[0][0].node_name);
-      console.log(npa_item[1][0].node_name);
-      console.log("\n");
-      if (
-        npa_item[0][0].node_name == temp1 &&
-        npa_item[1][0].node_name == temp2
-      ) {
-        var path = google.maps.geometry.encoding.decodePath(
-          npa_item[0][0].lat_lng
-        );
-        // console.log(path);
-        var polyline = new google.maps.Polyline({
-          path: path,
-          strokeColor: "#0000FF",
-          strokeOpacity: 0.8,
-          strokeWeight: 8,
-          fillColor: "#0000FF",
-          fillOpacity: 0.35,
-          map: map,
-        });
-        polyline.setMap(map);
-      }
+  // console.log(shortest);
+  // for (var slen = 0; slen < shortest.length - 1; slen++) {
+  //   // console.log(shortest[slen]);
+  //   // console.log(shortest[slen + 1]);
+  //   // console.log("\n");
+  //   var temp1 = shortest[slen];
+  //   var temp2 = shortest[slen + 1];
+  //   new_points_array.forEach((npa_item) => {
+  //     console.log(npa_item[0][0].node_name);
+  //     console.log(npa_item[1][0].node_name);
+  //     console.log("\n");
+  //     if (
+  //       npa_item[0][0].node_name == temp1 &&
+  //       npa_item[1][0].node_name == temp2
+  //     ) {
+  //       var path = google.maps.geometry.encoding.decodePath(
+  //         npa_item[0][0].lat_lng
+  //       );
+  //       // console.log(path);
+  //       var polyline = new google.maps.Polyline({
+  //         path: path,
+  //         strokeColor: "#0000FF",
+  //         strokeOpacity: 0.8,
+  //         strokeWeight: 8,
+  //         fillColor: "#0000FF",
+  //         fillOpacity: 0.35,
+  //         map: map,
+  //       });
+  //       polyline.setMap(map);
+  //     }
       
-    });
-  }
+  //   });
+  // }
 }
 
 //executes(route_ret)
