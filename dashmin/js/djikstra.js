@@ -84,56 +84,53 @@ var map = new google.maps.Map(document.getElementById("map"), {
   },
 });
 
+// Create a new Places service
+var service = new google.maps.places.PlacesService(map);
 
+// Search for fire stations near the map's center
+var request = {
+  location: {
+    lat: 13.33075,
+    lng: 123.724856,
+  },
+  radius: "5000",
+  type: ["fire_station"],
+};
 
-  // Create a new Places service
-  var service = new google.maps.places.PlacesService(map);
+service.nearbySearch(request, function (results, status) {
+  if (status === google.maps.places.PlacesServiceStatus.OK) {
+    // The first result is the nearest fire station
+    //nearestFireStation = results;
 
-  // Search for fire stations near the map's center
-  var request = {
-    location: {
-      lat: 13.33075,
-      lng: 123.724856,
-    },
-    radius: "5000",
-    type: ["fire_station"],
-  };
+    new google.maps.Marker({
+      position: request.location,
+      map: map,
+      label: "FIRE BURNING ON THE DANCE FLOOR",
+    });
 
-  service.nearbySearch(request, function (results, status) {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-      // The first result is the nearest fire station
-      //nearestFireStation = results;
-
-      for (var nearestFireStation of results) {
-
+    for (var nearestFireStation of results) {
       // console.log(nearestFireStation)
 
-        // new google.maps.Marker({
-        //   position: {
-        //     lat: nearestFireStation.geometry.location.lat(),
-        //     lng: nearestFireStation.geometry.location.lng(),
-        //   },
-        //   map: map,
-        //   title: nearestFireStation.name,
-        // });
+      new google.maps.Marker({
+        position: {
+          lat: nearestFireStation.geometry.location.lat(),
+          lng: nearestFireStation.geometry.location.lng(),
+        },
+        map: map,
+        label: nearestFireStation.name,
+      });
       getShortestPath(request.location, {
         lat: nearestFireStation.geometry.location.lat(),
         lng: nearestFireStation.geometry.location.lng(),
       });
-        
-        
-
-      }
     }
-  });
-
-
+  }
+});
 
 var directionsService = new google.maps.DirectionsService();
-function getShortestPath(origin_point,destination_point){
+function getShortestPath(origin_point, destination_point) {
   console.log(origin_point);
-  console.log(destination_point)
-  
+  console.log(destination_point);
 
   var request = {
     origin: origin_point,
@@ -142,15 +139,11 @@ function getShortestPath(origin_point,destination_point){
     provideRouteAlternatives: true,
   };
 
-  
-
   directionsService.route(request).then((ret) => executes(ret));
-
 }
 
-
-
 function executes(response) {
+  //console.log("EXECITED")
   var array_points = [];
   var route_ret;
   var graph = new Graph();
@@ -181,13 +174,12 @@ function executes(response) {
             lat_lng: steps.encoded_lat_lngs,
           },
         ]);
-        
       }
     }
   }
 
-  console.log(response);
-  //console.log(array_points)
+  // console.log(response);
+  // console.log(array_points)
 
   for (var out_index = 0; out_index < array_points.length; out_index++) {
     for (
@@ -212,16 +204,39 @@ function executes(response) {
   );
   // console.log(removed_duplicate_points);
 
-  removed_duplicate_points.forEach((item) => {
+  removed_duplicate_points.forEach((item, index) => {
+    // if(index == 0){
+    //   new google.maps.Marker({
+    //     position: {
+    //       lat: item[0].lat,
+    //       lng: item[0].lng,
+    //     },
+    //     map: map,
+    //     label: "ORIGIN",
+    //   });
+    // }
+    // else if(index == removed_duplicate_points.length - 1){
+    //   new google.maps.Marker({
+    //     position: {
+    //       lat: item[0].lat,
+    //       lng: item[0].lng,
+    //     },
+    //     map: map,
+    //     label: "DESTINATION",
+    //   });
+    // }
+    // else{
+    //   new google.maps.Marker({
+    //     position: {
+    //       lat: item[0].lat,
+    //       lng: item[0].lng,
+    //     },
+    //     map: map,
+    //     label: item[0].node_name,
+    //   });
+    // }
+
     console.log(item[0].node_name, item[0].lat, item[0].lng);
-    new google.maps.Marker({
-      position: {
-        lat: item[0].lat,
-        lng: item[0].lng,
-      },
-      map: map,
-      label: item[0].node_name,
-    });
   });
 
   var new_points_array = [];
@@ -231,24 +246,23 @@ function executes(response) {
     arr_index++;
     temp_array.push(array_points[arr_index]);
     new_points_array.push(temp_array);
-
   }
-
+  console.log(new_points_array)
   new_points_array.forEach((npa_item) => {
     graph.addNode(npa_item[0][0].node_name);
     graph.addNode(npa_item[1][0].node_name);
-    var path = google.maps.geometry.encoding.decodePath(npa_item[0][0].lat_lng);
-    // console.log(path);
-    var polyline = new google.maps.Polyline({
-      path: path,
-      strokeColor: "#800020",
-      strokeOpacity: 0.8,
-      strokeWeight: 8,
-      fillColor: "#800020",
-      fillOpacity: 0.35,
-      map: map,
-    });
-    polyline.setMap(map);
+    // var path = google.maps.geometry.encoding.decodePath(npa_item[0][0].lat_lng);
+    // // console.log(path);
+    // var polyline = new google.maps.Polyline({
+    //   path: path,
+    //   strokeColor: "#800020",
+    //   strokeOpacity: 0.8,
+    //   strokeWeight: 8,
+    //   fillColor: "#800020",
+    //   fillOpacity: 0.35,
+    //   map: map,
+    // });
+    // polyline.setMap(map);
   });
   new_points_array.forEach((npa_item) => {
     graph.addEdge(
@@ -257,41 +271,42 @@ function executes(response) {
       npa_item[0][0].distance
     );
   });
-  //var shortest = graph.dijkstra("AAAA", "AAAH");
+  console.log(new_points_array)
+  var shortest = graph.dijkstra("AAAA", new_points_array[new_points_array.length - 1][1][0].node_name );
 
-  // console.log(shortest);
-  // for (var slen = 0; slen < shortest.length - 1; slen++) {
-  //   // console.log(shortest[slen]);
-  //   // console.log(shortest[slen + 1]);
-  //   // console.log("\n");
-  //   var temp1 = shortest[slen];
-  //   var temp2 = shortest[slen + 1];
-  //   new_points_array.forEach((npa_item) => {
-  //     console.log(npa_item[0][0].node_name);
-  //     console.log(npa_item[1][0].node_name);
-  //     console.log("\n");
-  //     if (
-  //       npa_item[0][0].node_name == temp1 &&
-  //       npa_item[1][0].node_name == temp2
-  //     ) {
-  //       var path = google.maps.geometry.encoding.decodePath(
-  //         npa_item[0][0].lat_lng
-  //       );
-  //       // console.log(path);
-  //       var polyline = new google.maps.Polyline({
-  //         path: path,
-  //         strokeColor: "#0000FF",
-  //         strokeOpacity: 0.8,
-  //         strokeWeight: 8,
-  //         fillColor: "#0000FF",
-  //         fillOpacity: 0.35,
-  //         map: map,
-  //       });
-  //       polyline.setMap(map);
-  //     }
-      
-  //   });
-  // }
+  console.log(shortest);
+  for (var slen = 0; slen < shortest.length - 1; slen++) {
+    // console.log(shortest[slen]);
+    // console.log(shortest[slen + 1]);
+    // console.log("\n");
+    var temp1 = shortest[slen];
+    var temp2 = shortest[slen + 1];
+    new_points_array.forEach((npa_item) => {
+      console.log(npa_item[0][0].node_name);
+      console.log(npa_item[1][0].node_name);
+      console.log("\n");
+      if (
+        npa_item[0][0].node_name == temp1 &&
+        npa_item[1][0].node_name == temp2
+      ) {
+        var path = google.maps.geometry.encoding.decodePath(
+          npa_item[0][0].lat_lng
+        );
+        // console.log(path);
+        var polyline = new google.maps.Polyline({
+          path: path,
+          strokeColor: "#0000FF",
+          strokeOpacity: 0.8,
+          strokeWeight: 8,
+          fillColor: "#0000FF",
+          fillOpacity: 0.35,
+          map: map,
+        });
+        polyline.setMap(map);
+      }
+
+    });
+  }
 }
 
 //executes(route_ret)
