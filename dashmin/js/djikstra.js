@@ -111,7 +111,7 @@ service.nearbySearch(request, function (results, status) {
     for (var nearestFireStation of results) {
       // console.log(nearestFireStation)
 
-      new google.maps.Marker({
+      var fire_marker = new google.maps.Marker({
         position: {
           lat: nearestFireStation.geometry.location.lat(),
           lng: nearestFireStation.geometry.location.lng(),
@@ -119,10 +119,19 @@ service.nearbySearch(request, function (results, status) {
         map: map,
         label: nearestFireStation.name,
       });
-      getShortestPath(request.location, {
-        lat: nearestFireStation.geometry.location.lat(),
-        lng: nearestFireStation.geometry.location.lng(),
-      });
+
+      google.maps.event.addListener(
+        fire_marker,
+        "click",
+        function (event_data) {
+          console.log();
+          //alert("Marker clicked!");
+          getShortestPath(request.location, {
+            lat: event_data.latLng.lat(),
+            lng: event_data.latLng.lng(),
+          });
+        }
+      );
     }
   }
 });
@@ -247,7 +256,7 @@ function executes(response) {
     temp_array.push(array_points[arr_index]);
     new_points_array.push(temp_array);
   }
-  console.log(new_points_array)
+  console.log(new_points_array);
   new_points_array.forEach((npa_item) => {
     graph.addNode(npa_item[0][0].node_name);
     graph.addNode(npa_item[1][0].node_name);
@@ -271,8 +280,11 @@ function executes(response) {
       npa_item[0][0].distance
     );
   });
-  console.log(new_points_array)
-  var shortest = graph.dijkstra("AAAA", new_points_array[new_points_array.length - 1][1][0].node_name );
+  console.log(new_points_array);
+  var shortest = graph.dijkstra(
+    "AAAA",
+    new_points_array[new_points_array.length - 1][1][0].node_name
+  );
 
   console.log(shortest);
   for (var slen = 0; slen < shortest.length - 1; slen++) {
@@ -281,7 +293,7 @@ function executes(response) {
     // console.log("\n");
     var temp1 = shortest[slen];
     var temp2 = shortest[slen + 1];
-    new_points_array.forEach((npa_item) => {
+    for (npa_item of new_points_array) {
       console.log(npa_item[0][0].node_name);
       console.log(npa_item[1][0].node_name);
       console.log("\n");
@@ -292,7 +304,6 @@ function executes(response) {
         var path = google.maps.geometry.encoding.decodePath(
           npa_item[0][0].lat_lng
         );
-        // console.log(path);
         var polyline = new google.maps.Polyline({
           path: path,
           strokeColor: "#0000FF",
@@ -303,9 +314,14 @@ function executes(response) {
           map: map,
         });
         polyline.setMap(map);
-      }
+        
+        // console.log(path);
 
-    });
+        setTimeout(function(){
+          console.log("HELLO")
+        }, 1000);
+      }
+    }
   }
 }
 
