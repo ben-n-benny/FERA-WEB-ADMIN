@@ -16,7 +16,7 @@ for (let i = 65; i <= 68; i++) {
 
 class Graph {
   constructor() {
-    this.nodes
+    this.nodes;
   }
 
   addNode(node) {
@@ -80,46 +80,46 @@ class Graph {
 var graph = new Graph();
 
 graph.nodes = new Map();
-graph.addNode("AAAA");
-graph.addNode("AAAB");
-graph.addNode("AAAB");
-graph.addNode("AAAD");
-graph.addNode("AAAD");
-graph.addNode("AAAF");
-graph.addNode("AAAF");
-graph.addNode("AAAH");
-graph.addNode("AAAA");
-graph.addNode("AAAB");
-graph.addNode("AAAB");
-graph.addNode("AAAL");
-graph.addNode("AAAL");
-graph.addNode("AAAN");
-graph.addNode("AAAN");
-graph.addNode("AAAH");
-graph.addNode("AAAA");
-graph.addNode("AAAB");
-graph.addNode("AAAB");
-graph.addNode("AAAT");
-graph.addNode("AAAT");
-graph.addNode("AAAV");
-graph.addNode("AAAV");
-graph.addNode("AAAH");
+// graph.addNode("AAAA");
+// graph.addNode("AAAB");
+// graph.addNode("AAAB");
+// graph.addNode("AAAD");
+// graph.addNode("AAAD");
+// graph.addNode("AAAF");
+// graph.addNode("AAAF");
+// graph.addNode("AAAH");
+// graph.addNode("AAAA");
+// graph.addNode("AAAB");
+// graph.addNode("AAAB");
+// graph.addNode("AAAL");
+// graph.addNode("AAAL");
+// graph.addNode("AAAN");
+// graph.addNode("AAAN");
+// graph.addNode("AAAH");
+// graph.addNode("AAAA");
+// graph.addNode("AAAB");
+// graph.addNode("AAAB");
+// graph.addNode("AAAT");
+// graph.addNode("AAAT");
+// graph.addNode("AAAV");
+// graph.addNode("AAAV");
+// graph.addNode("AAAH");
 
-graph.addEdge("AAAA", "AAAB", 300);
-graph.addEdge("AAAB", "AAAD", 93);
-graph.addEdge("AAAD", "AAAF", 1108);
-graph.addEdge("AAAF", "AAAH", 1381);
-graph.addEdge("AAAA", "AAAB", 300);
-graph.addEdge("AAAB", "AAAL", 761);
-graph.addEdge("AAAL", "AAAN", 1274);
-graph.addEdge("AAAN", "AAAH", 363);
-graph.addEdge("AAAA", "AAAB", 300);
-graph.addEdge("AAAB", "AAAT", 2267);
-graph.addEdge("AAAT", "AAAV", 475);
-graph.addEdge("AAAV", "AAAH", 644);
+// graph.addEdge("AAAA", "AAAB", 300);
+// graph.addEdge("AAAB", "AAAD", 93);
+// graph.addEdge("AAAD", "AAAF", 1108);
+// graph.addEdge("AAAF", "AAAH", 1381);
+// graph.addEdge("AAAA", "AAAB", 300);
+// graph.addEdge("AAAB", "AAAL", 761);
+// graph.addEdge("AAAL", "AAAN", 1274);
+// graph.addEdge("AAAN", "AAAH", 363);
+// graph.addEdge("AAAA", "AAAB", 300);
+// graph.addEdge("AAAB", "AAAT", 2267);
+// graph.addEdge("AAAT", "AAAV", 475);
+// graph.addEdge("AAAV", "AAAH", 644);
 
-console.log(graph.nodes)
-console.log(graph.dijkstra("AAAA", "AAAH"));
+// console.log(graph.nodes)
+// console.log(graph.dijkstra("AAAA", "AAAH"));
 // graph.addEdge("A", "E", 4);
 // graph.addEdge("E", "D", 1);
 // graph.addEdge("E", "B", 2);
@@ -163,12 +163,11 @@ var request = {
 };
 
 var array_points = [];
-var route_ret ;
-
+var route_ret;
 
 directionsService.route(request).then((ret) => executes(ret));
 
-console.log(route_ret)
+console.log(route_ret);
 
 function executes(response) {
   var letter_index = 0;
@@ -186,6 +185,7 @@ function executes(response) {
             lat: steps.start_point.lat(),
             lng: steps.start_point.lng(),
             distance: steps.distance.value,
+            lat_lng: steps.encoded_lat_lngs,
           },
         ]);
         array_points.push([
@@ -194,6 +194,7 @@ function executes(response) {
             lat: steps.end_point.lat(),
             lng: steps.end_point.lng(),
             distance: steps.distance.value,
+            lat_lng: steps.encoded_lat_lngs,
           },
         ]);
         // array_points.push([
@@ -273,22 +274,25 @@ function executes(response) {
     }
   }
   // console.log(array_points)
-  // let removed_duplicate_points = array_points.filter(
-  //   (point, index) =>
-  //     array_points.map((e) => e[0].node_name).indexOf(point[0].node_name) === index
-  // );
+  let removed_duplicate_points = array_points.filter(
+    (point, index) =>
+      array_points.map((e) => e[0].node_name).indexOf(point[0].node_name) ===
+      index
+  );
   // console.log(removed_duplicate_points);
 
-  // removed_duplicate_points.forEach((item)=>{
-  //     new google.maps.Marker({
-  //       position: {
-  //         lat: item[0].lat,
-  //         lng: item[0].lng,
-  //       },
-  //       map: map,
-  //       label: item[0].node_name,
-  //     });
-  // })
+  removed_duplicate_points.forEach((item) => {
+    console.log(item[0].node_name, item[0].lat, item[0].lng);
+    new google.maps.Marker({
+      position: {
+        lat: item[0].lat,
+        lng: item[0].lng,
+      },
+      map: map,
+      label: item[0].node_name,
+    });
+  });
+
   var new_points_array = [];
   for (var arr_index = 0; arr_index < array_points.length; arr_index++) {
     var temp_array = [];
@@ -299,36 +303,41 @@ function executes(response) {
   }
 
   
-  
+
   new_points_array.forEach((npa_item) => {
-
-    console.log(npa_item)
-    // console.log(npa_item[0][0].node_name);
-    // console.log(npa_item[1][0].node_name);
-    // console.log(
-    //   npa_item[0][0].node_name,
-    //   npa_item[1][0].node_name,
-    //   npa_item[0][0].distance
-    // );
-    // console.log(npa_item[0][0].node_name);
-    // console.log(npa_item[1][0].node_name);
-    // console.log(
-    //   `graph.addEdge("${npa_item[0][0].node_name}", "${npa_item[1][0].node_name}", ${npa_item[0][0].distance})`
-    // );
-    // graph.addNode(npa_item[0][0].node_name);
-    // graph.addNode(npa_item[1][0].node_name);
-    // graph.addEdge(
-    //   npa_item[0][0].node_name,
-    //   npa_item[1][0].node_name,
-    //   npa_item[0][0].distance
-    // );
-    
-    
+    graph.addNode(npa_item[0][0].node_name);
+    graph.addNode(npa_item[1][0].node_name);
   });
-  // console.log(graph.dijkstra("AAAA", "AAAB"));
+  new_points_array.forEach((npa_item) => {
+    graph.addEdge(
+      npa_item[0][0].node_name,
+      npa_item[1][0].node_name,
+      npa_item[0][0].distance
+    );
+  });
+  console.log(graph.dijkstra("AAAA", "AAAH"));
 
-  
-  //console.log(graph.nodes);
+  console.log(graph.nodes);
+
+  new_points_array.forEach((npa_item) => {
+    console.log(npa_item[0][0].node_name);
+    console.log(npa_item[1][0].node_name);
+    console.log(npa_item[0][0].lat_lng);
+    console.log(npa_item[1][0].lat_lng);
+    console.log("\n");
+    var path = google.maps.geometry.encoding.decodePath(npa_item[0][0].lat_lng);
+    console.log(path)
+    var polyline = new google.maps.Polyline({
+      path: path,
+      strokeColor: single_color,
+      strokeOpacity: 0.8,
+      strokeWeight: 8,
+      fillColor: single_color,
+      fillOpacity: 0.35,
+      map: map,
+    });
+    polyline.setMap(map);
+  });
 }
 
 //executes(route_ret)
